@@ -1,8 +1,11 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require('express');
+const dotenv = require('dotenv').config();
+const connectDB = require('./config/db');
+const bodyParser = require('body-parser');
 
 const port = process.env.PORT || 5000;
-var app = express();
+connectDB();
+const app = express();
 
 // parse incoming requests
 app.use(bodyParser.json());
@@ -20,7 +23,7 @@ app.use('/', require('./routes/index'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('File Not Found');
+  const err = new Error('File Not Found');
   err.status = 404;
   next(err);
 });
