@@ -17,8 +17,8 @@ app.use(session({
   resave: true,
   store: MongoStore.create({ 
     mongoUrl: process.env.MONGO_URI, 
-    // Session expiration 15 minutes
-    ttl: 15 * 60 }),
+    // Session expiration one day
+    ttl: 24 * 60 * 60 }),
   saveUninitialized: false
 }));
 
@@ -27,8 +27,6 @@ app.use(function (req, res, next) {
   res.locals.currentUser = req.session.userId;
   next();
 });
-
-
 
 // parse incoming requests
 app.use(bodyParser.json());
@@ -51,8 +49,7 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handler
-// define as the last app.use callback
+// error handler, define as the last app.use callback
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
