@@ -1,16 +1,24 @@
 const express = require('express');
+const colors = require('colors');
 const dotenv = require('dotenv').config();
 const connectDB = require('./config/db');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const MongoStore = require('connect-mongo');
 
 const port = process.env.PORT || 5000;
 const app = express();
+
+connectDB();
 
 // use sessions for tracking logins
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
+  store: MongoStore.create({ 
+    mongoUrl: process.env.MONGO_URI, 
+    // Session expiration 15 minutes
+    ttl: 15 * 60 }),
   saveUninitialized: false
 }));
 
@@ -20,7 +28,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-connectDB();
+
 
 // parse incoming requests
 app.use(bodyParser.json());
